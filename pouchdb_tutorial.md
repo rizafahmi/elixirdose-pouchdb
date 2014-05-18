@@ -34,7 +34,7 @@ First, we need HTML file for this project. Then we download [this script](https:
 One more file we need is `app.js` for us to play around. We will write Javascript
 inside this file. And to serve this html and javascript files, we need a simple web server. I usually used
 `pyhton -m SimpleHTTPServer` command line, but let's use Erlang's [Mochiweb](https://github.com/mochi/mochiweb/)
-for this purpose.
+for this purpose. (Or using dynamo instead)
 
   $> git clone git://github.com/mochi/mochiweb.git
   $> cd mochiweb
@@ -173,10 +173,29 @@ have to sync manually. Easy enough, add `setInterval()` around sync function.
     }, 2000);
 
 Now when we add document in PouchDB or in CouchDB, it will be synced automatically.
-Cool, right?! Let's make it cooler with DOM manipulation. We print out the total of
+Cool, right?! 
+
+
+End of part one
+
+
+Let's make it cooler with DOM manipulation. We print out the total of
 documents in the HTML so we don't have to do it on Javascript console. To do this
 we need help from another library: [jQuery](http://www.jquery.com/). I bet you know
 all about this. Just add jquery to our `index.html` and start typing code below:
 
+  <h2>Total documents: <span id="totalDocs">0</span></h2>
   <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 
+> View on github: index.html
+  
+  function syncDB(){
+
+    db.sync("http://localhost:5984/diaries");
+    
+    $("#totalDocs").html();
+
+  }
+  setInterval(function(){
+    syncDB();
+    }, 2000);
