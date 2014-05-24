@@ -13,7 +13,22 @@ According to their website, PouchDB was written to help web developer build appl
 
 PouchDB actually written in Javascript, not Erlang. But the API is pretty much the same with CouchDB.
 
-### Installing PouchDB
+### Installing Phoenix Web Framework
+
+To serve html and javascript files, we need a simple web server or web framework. I usually used
+`pyhton -m SimpleHTTPServer` command line, but let's use one of Elixir's web framework
+for this purpose. Let's pick [Phoenix](https://github.com/phoenixframework/phoenix) for no reason :)
+
+    $> git clone https://github.com/phoenixframework/phoenix.git && cd phoenix && mix do deps.get, compile
+    $> mix phoenix.new pouch_phoenix ../pouch_phoenix
+    $> cd ../pouch_phoenix
+    $> mix do deps.get, compile
+    $> mix phoenix.start
+
+That's pretty much it! Now enter `http://localhost:4000` on your browser. If you
+see "Hello world" then you good to go.
+
+### Installing PouchDB And Phoenix
 
 First, we need HTML file for this project. Then we download [this script](https://github.com/daleharvey/pouchdb/releases/download/2.2.0/pouchdb-2.2.0.min.js) and then add the script to the HTML file.
 
@@ -22,7 +37,8 @@ First, we need HTML file for this project. Then we download [this script](https:
     <head>
       <meta charset="UTF-8">
       <title></title>
-      <script src="pouchdb-2.2.0.min.js"></script>
+      <script src="/static/pouchdb-2.2.0.min.js"></script>
+      <script src="/static/app.js"></script>
     </head>
     <body>
       <h1>Hello PouchDB!</h1>
@@ -31,33 +47,23 @@ First, we need HTML file for this project. Then we download [this script](https:
 
 > View on github: index.html
 
+One more step
+we need are copying `pouchdb-2.2.0.min.js` to `priv/static/js` folder and `index.html` to `priv/views` folder. You need to create `views` directory first. Last step we need to edit our controller to load our html file.
+
+    defmodule PouchPhoenix.Controllers.Pages do
+      use Phoenix.Controller
+
+      def index(conn) do
+        html conn, File.read!(Path.join(["priv/views/index.html"]))
+      end
+    end
+
+Then restart the web server. Then go to localhost:4000 once again. You should see our html load just fine.
+
 One more file we need is `app.js` for us to play around. We will write Javascript
-inside this file. And to serve this html and javascript files, we need a simple web server. I usually used
-`pyhton -m SimpleHTTPServer` command line, but let's use one of Elixir's web framework
-for this purpose. Let's pick [Sugar](http://sugar-framework.github.io/) for no reason :)
-Ok, this is the reason, recently Sugar release new version and it's catch my attention
-so let's go with Sugar.
+inside this file. Create the file and put it in `priv/static/js` folder.
 
-    $> mix new sugar_pouchdb
-    $> cd sugar_pouchdb
-    $> # Add '{:sugar, github: "sugar-framework/sugar"}'
-    $> # to your deps
-    $> vim mix.exs
-    $> # Get dependencies and compile them
-    $> mix do deps.get, deps.compile
-
-    $> # Add your Sugar files
-    $> mix sugar.init
-
-    $> # Start your server
-    $> mix server
-
-That's pretty much it! Now enter `http://localhost:4000` on your browser. If you
-see "Hello world" then you good to go. One more step
-we need are copying `pouchdb-2.2.0.min.js` and `index.html` we created earlier to
-`priv/www` directory. Then restart the web server. Then go to localhost:8080 once again.
-
-From now on, we leave the server-side world and journey to client-side world. Be prepare....
+From now on, we leave and say goodbye to server-side world and journey to client-side world. Be prepare....
 
 > Warning: we will use javascript a lot from now on, I hope you love Javascript :)
 
@@ -164,7 +170,7 @@ Type this at the end of our `app.js`.
 
 If you open Javascript console then refresh your browser, you'll see the sync process.
 After the sync process finished, reopen Futon and now you'll find `diaries` database.
-Click it to open and view the data. In `diary` database on CouchDB you'll find
+Click it to open and view the data. In `diaries` database on CouchDB you'll find
 exactly the same data we found in PouchDB in our browser! Now let's create a new
 document from CouchDB Futon then hit "Save Document". When we browse `diaries`
 database on CouchDB, we will find three data, right?! But the data on PouchDB still
@@ -216,4 +222,10 @@ Let's add one more document from Couchdb Futon. When you save, wait for about
 two seconds and our browser will show you how many documents we have after synced.
 
 
-End of part one
+## Conclusion
+
+What we did today was totally experimental. I'm aware that there was only small portion of Elixir that we cover. There is also a possibility not using Elixir at all. All we need is web server like Apache, nginx or mochiweb.
+
+But this concept alone is something else. Imagine that we just need to learn client-side scripting like Javascript and jQuery or even javascript framework such as Backbone or AngularJS with a little knowledge of NoSQL database to create 'almost' real-time web application.
+
+Until next time.

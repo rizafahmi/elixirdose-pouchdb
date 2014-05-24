@@ -1,3 +1,0 @@
-# SugarPouchdb
-
-** TODO: Add description **
