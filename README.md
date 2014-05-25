@@ -1,23 +1,20 @@
 # PouchDB: CouchDB Within The Browser
 
-I know CouchDB was build with Erlang. I really like CouchDB. It's new breed of database: document database,
-it's fault-tolerant (thanks to Erlang VM), replication and conflict resolution features. What's not to love?!
-Then I discover PouchDB, CouchDB within the web browser! With PouchDB, we enable to store data locally on browser then sync it with CouchDB.
-Even better!
+I know CouchDB was built with Erlang. I really like CouchDB. It's new breed of document-based database, fault-tolerant (thanks to Erlang VM), and with replication and conflict resolution features. What's not to love?!
 
-In this article we will dig more about PouchDB and let's see where we will going with this.
+Then I discovered PouchDB, CouchDB within the web browser! With PouchDB, we are able to store data locally in browser and then sync it with CouchDB. Even better!
+
+In this article, we will dig more into PouchDB and see where we can go with it.
 
 ## About PouchDB
 
-According to their website, PouchDB was written to help web developer build applications that wor offline as well as they do online. Applications save data locally, so the user can use all the features of an app even when they're offline. Plus, the data is synchronized between clients, so the user has up-to-date data wherever they go.
+According to [their website](http://pouchdb.com), PouchDB was written to help web developers build applications that work as well offline as they do online. Applications save data locally, so the user can use all the features of an app even when they're offline. Plus, the data is synchronized between clients, so the user has up-to-date data wherever they go.
 
-PouchDB actually written in Javascript, not Erlang. But the API is pretty much the same with CouchDB.
+PouchDB is actually written in Javascript, not Erlang. But the API is pretty much the same with CouchDB.
 
 ### Installing Phoenix Web Framework
 
-To serve html and javascript files, we need a simple web server or web framework. I usually used
-`pyhton -m SimpleHTTPServer` command line, but let's use one of Elixir's web framework
-for this purpose. Let's pick [Phoenix](https://github.com/phoenixframework/phoenix) for no reason :)
+To serve html and javascript files, we need a simple web server or web framework. I usually use the `python -m SimpleHTTPServer` command line, but let's use one of Elixir's web frameworks for this purpose. We'll pick [Phoenix](https://github.com/phoenixframework/phoenix) for no reason. :)
 
     $> git clone https://github.com/phoenixframework/phoenix.git && cd phoenix && mix do deps.get, compile
     $> mix phoenix.new pouch_phoenix ../pouch_phoenix
@@ -25,12 +22,11 @@ for this purpose. Let's pick [Phoenix](https://github.com/phoenixframework/phoen
     $> mix do deps.get, compile
     $> mix phoenix.start
 
-That's pretty much it! Now enter `http://localhost:4000` on your browser. If you
-see "Hello world" then you good to go.
+That's pretty much it! Now enter `http://localhost:4000` on your browser. If you see "Hello world", then you're good to go.
 
 ### Installing PouchDB And Phoenix
 
-First, we need HTML file for this project. Then we download [this script](https://github.com/daleharvey/pouchdb/releases/download/2.2.0/pouchdb-2.2.0.min.js) and then add the script to the HTML file.
+First, we need an HTML file for this project. Download [this script](https://github.com/daleharvey/pouchdb/releases/download/2.2.0/pouchdb-2.2.0.min.js) and then add it to the HTML file.
 
     <!DOCTYPE html>
     <html lang="en">
@@ -47,8 +43,7 @@ First, we need HTML file for this project. Then we download [this script](https:
 
 > View on github: index.html
 
-One more step
-we need are copying `pouchdb-2.2.0.min.js` to `priv/static/js` folder and `index.html` to `priv/views` folder. You need to create `views` directory first. Last step we need to edit our controller to load our html file.
+One more step we need is copying `pouchdb-2.2.0.min.js` to the `priv/static/js` folder, and `index.html` to the `priv/views` folder. You need to create the `views` directory first. The last step we need to do is edit the controller to load our html file.
 
     defmodule PouchPhoenix.Controllers.Pages do
       use Phoenix.Controller
@@ -58,21 +53,18 @@ we need are copying `pouchdb-2.2.0.min.js` to `priv/static/js` folder and `index
       end
     end
 
-Then restart the web server. Then go to localhost:4000 once again. You should see our html load just fine.
+Restart the web server. Go to localhost:4000 once again. You should see our html load just fine.
 
-One more file we need is `app.js` for us to play around. We will write Javascript
-inside this file. Create the file and put it in `priv/static/js` folder.
+One more file we need is `app.js` to play around with. We will write Javascript inside this file. Create the file and put it in `priv/static/js` folder.
 
-From now on, we leave and say goodbye to server-side world and journey to client-side world. Be prepare....
+From now on, we leave and say goodbye to the server-side world and journey client-side. Be prepared...
 
 > Warning: we will use javascript a lot from now on, I hope you love Javascript :)
 
 
 ### Trying PouchDB
 
-Now open up `app.js` and start writing Javascript. First, we need to define a new
-database. We called it `diaries`, since we want to create 5 senses diary similar to
-we create when trying out Dynamo in [this article](http://www.elixirdose.com/brief-introduction-to-elixir-web-framework-dynamo/).
+Now open up `app.js` and start writing Javascript. First, we need to define a new database. We call it `diaries`, since we want to create a five senses diary similar to what we created when trying out Dynamo in [this article](http://www.elixirdose.com/brief-introduction-to-elixir-web-framework-dynamo/).
 
     var db = new PouchDB('diaries');
 
@@ -97,12 +89,10 @@ Then we add one or more entries to the database.
 
 > View in github: app.js
 
-Then we can start getting data. You can use `db.get()` or `db.query()`. `db.get()`
-need `_id` to retrieve data. If you want to get all data, use `db.query()`.
-If you familiar with couchdb, you'll know what we will do next: create custom view.
-CouchDB need to have a view to get the data. It's written in Javascript. So let's have
-one. We will create a view that will get all data if the document have title. If
-document doesn't have a title, it will not show.
+Now we can start getting data. You can use `db.get()` or `db.query()`. `db.get()` needs `_id` to retrieve data. If you want to get all the data, use `db.query()`.
+If you're familiar with couchdb, you'll know what we will do next: create custom view.
+
+CouchDB needs to have a view to get the data. It's written in Javascript. We will create a view that will get all data if the document has a title. If the document doesn't have a title, it will not show.
 
     function map(doc){
       if (doc.title){
@@ -110,7 +100,7 @@ document doesn't have a title, it will not show.
       }
     }
 
-Then run the query and print it on Javascript console.
+Run the query and print it out on a Javascript console.
 
     db.query({map: map}, {reduce: false}, function(err, response){
       console.log(response);
@@ -152,51 +142,38 @@ The response should look like this:
 
 ### Sync With CouchDB
 
-Things get interesting when we able to sync to and from CouchDB. And more interesting
-part is doing that very easy with PouchDB. Before we doing anything interesting,
-make sure you have CouchDB installed on your localhost and setting up correctly.
+Things get interesting when we are able to sync to and from CouchDB. Doing that is very easy with PouchDB. Before we do anything interesting, make sure you have CouchDB installed on your localhost and set up correctly.
+
 Do this in your terminal:
 
     $> curl http://localhost:5984 -k
     {"couchdb":"Welcome","uuid":"ce0f54bc27dba624e4c9a2311c2cf733","version":"1.3.1","vendor":{"version":"1.3.1","name":"The Apache Software Foundation"}}
 
-Or you can always use service such as [iriscouch.com](http://www.iriscouch.com).
-Now let's open CouchDB's Futon admin site [http://localhost:5984/_utils/index.html](http://localhost:5984/_utils/index.html) and
-make sure you didn't have database named `diaries`.
+Or you can use a service such as [iriscouch.com](http://www.iriscouch.com). 
 
-Type this at the end of our `app.js`.
+Let's open CouchDB's Futon admin site [http://localhost:5984/_utils/index.html](http://localhost:5984/_utils/index.html) and
+make sure you didn't already have a database named `diaries`.
+
+Type this at the end of `app.js`.
 
     db.sync("http://localhost:5984/diaries"); // Or if you use iriscouch "http://username:password@mysubdomain.iriscouch.com"
 
-If you open Javascript console then refresh your browser, you'll see the sync process.
-After the sync process finished, reopen Futon and now you'll find `diaries` database.
-Click it to open and view the data. In `diaries` database on CouchDB you'll find
-exactly the same data we found in PouchDB in our browser! Now let's create a new
-document from CouchDB Futon then hit "Save Document". When we browse `diaries`
-database on CouchDB, we will find three data, right?! But the data on PouchDB still
-two. Before we revisit our site, please remove or comment `db.put()` line so
-when we refresh our browser it will not create a new document.
+If you open a Javascript console then refresh your browser, you'll see the sync process. After the sync process finishes, reopen Futon and you'll find the `diaries` database. Click it to open and view the data. In the `diaries` database on CouchDB you'll find exactly the same data we found in PouchDB in our browser! Now let's create a new document from CouchDB Futon then hit "Save Document". 
 
-When we refresh our browser now, it will sync once again.... And viola! Your data
-is synced again! It feels like magic!
+When we browse the `diaries` database on CouchDB, we will find three points of data, right?! But the data on PouchDB is still two. Before we revisit our site, please remove or comment the `db.put()` line so when we refresh our browser it will not create a new document.
 
-Let's do one more magic. We want auto sync every, let's say 2 seconds so we didn't
-have to sync manually. Easy enough, add `setInterval()` around sync function.
+When we refresh our browser now, it will sync once again... And voila! Your data is synced again! It feels like magic!
+
+Let's do one more magic trick. We want to auto sync every two seconds, let's say, so we don't have to sync manually. Easy enough; add `setInterval()` around the sync function.
 
     setInterval(function(){
       db.sync("http://localhost:5984/diaries");
     }, 2000);
 
-Now when we add document in PouchDB or in CouchDB, it will be synced automatically.
-Cool, right?!
+Now when we add a document in PouchDB or in CouchDB, it will be synced automatically.  Cool, right?!
 
-
-
-
-Let's make it cooler with DOM manipulation. We print out the total of
-documents in the HTML so we don't have to do it on Javascript console. To do this
-we need help from another library: [jQuery](http://www.jquery.com/). I bet you know
-all about this. Just add jquery to our `index.html` and start typing code below:
+Let's make it cooler with DOM manipulation. We can print out the number of documents in the HTML so we don't have to do it on Javascript console. To do this,
+we need help from another library: [jQuery](http://www.jquery.com/). I bet you know all about this one. Add jquery to our `index.html` and start typing the code below:
 
     <h2>Total documents: <span id="totalDocs">0</span></h2>
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -217,15 +194,21 @@ all about this. Just add jquery to our `index.html` and start typing code below:
 
 > View on github: app.js
 
-Refresh your browser, viola! Now your browser shows how many documents saved.
-Let's add one more document from Couchdb Futon. When you save, wait for about
+Refresh your browser and voila! Now your browser shows how many documents are saved. Let's add one more document from Couchdb Futon. When you save, wait for about
 two seconds and our browser will show you how many documents we have after synced.
 
 
 ## Conclusion
 
-What we did today was totally experimental. I'm aware that there was only small portion of Elixir that we cover. There is also a possibility not using Elixir at all. All we need is web server like Apache, nginx or mochiweb.
+What we did today was totally experimental. I'm aware that there was only a small portion of Elixir that we covered. There is also a possibility of not using Elixir at all. All we need is web server like Apache, nginx, or mochiweb.
 
-But this concept alone is something else. Imagine that we just need to learn client-side scripting like Javascript and jQuery or even javascript framework such as Backbone or AngularJS with a little knowledge of NoSQL database to create 'almost' real-time web application.
+But this concept alone is something else. We only need to learn client-side scripting like Javascript and jQuery -- or even a JavaScript framework such as Backbone or AngularJS -- with a little knowledge of NoSQL databases to create 'almost' real-time web application.
 
-Until next time.
+Until next time -- !
+
+
+## References
+* [pouchdb.com](http://pouchdb.com)
+* [Phoenix Framework](https://github.com/phoenixframework/phoenix)
+* [CouchDB](http://couchdb.apache.org/)
+* [PouchDB Introduction Video](http://www.youtube.com/watch?v=TO4oGnDxkY0)
