@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="pouchApp">
 <head>
   <meta charset="UTF-8">
   <title>AngularJS Meet PouchDB</title>
 </head>
-<body ng-init="diaries=['Entry #1', 'Entry #2']">
+<body ng-controller="diariesController">
   <h1>Five Senses Diary</h1>
     <table>
       <th>
@@ -27,5 +27,7 @@
     </table>
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+  <script src="/static/js/pouchdb-2.2.0.min.js"></script>
+  <script src="/static/js/app-angular.js"></script>
 </body>
 </html>

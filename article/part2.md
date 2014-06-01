@@ -131,4 +131,61 @@ Now let's inject dummy data using `ng-init` then display it on the table using
 
 > View on github
 
-Then you'll see `Entry #1` and `Entry #2`.
+Then you'll see `Entry #1` and `Entry #2` in browser. It's time to connect to pouchDB by
+re-adding pouchDB script and add new javascript file for our playing ground.
+
+    <script src="/static/js/pouchdb-2.2.0.min.js"></script>
+    <script src="/static/js/app-angular.js"></script>
+> View on github
+
+Open up `app-angular.js` add angular module so we can connect
+between view(html) and controller(javascript).
+
+    var app = angular.module('pouchApp', []);
+
+    app.controller('diariesController', function($scope) {
+      $scope.diaries = [
+        {"id": 1, "title": "Entry #1"},
+        {"id": 2, "title": "Entry #2"}
+      ];
+    }
+
+> View on github
+
+After that, open our html file then add `pouchApp` module in `ng-app` so it'll connect.
+And also remove `ng-init` then replace it with `ng-controller`.
+
+
+    <!DOCTYPE html>
+    <html lang="en" ng-app="pouchApp">
+    <head>
+      <meta charset="UTF-8">
+      <title>AngularJS Meet PouchDB</title>
+    </head>
+    <body ng-controller="diariesController">
+      <h1>Five Senses Diary</h1>
+        <table>
+          <th>
+            <td>Title</td>
+            <td>Sight</td>
+            <td>Smell</td>
+            <td>Sound</td>
+            <td>Taste</td>
+            <td>Touch</td>
+          </th>
+          <tr ng-repeat="diary in diaries">
+            <td>{{diary}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+      <script src="/static/js/pouchdb-2.2.0.min.js"></script>
+      <script src="/static/js/app-angular.js"></script>
+    </body>
+    </html>
