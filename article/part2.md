@@ -152,6 +152,7 @@ between view(html) and controller(javascript).
 
 > View on github
 
+With this, we moved dummy data into javascript file.
 After that, open our html file then add `pouchApp` module in `ng-app` so it'll connect.
 And also remove `ng-init` then replace it with `ng-controller`.
 
@@ -174,7 +175,7 @@ And also remove `ng-init` then replace it with `ng-controller`.
             <td>Touch</td>
           </th>
           <tr ng-repeat="diary in diaries">
-            <td>{{diary}}</td>
+            <td>{{diary.title}}</td>
             <td></td>
             <td></td>
             <td></td>
@@ -189,3 +190,32 @@ And also remove `ng-init` then replace it with `ng-controller`.
       <script src="/static/js/app-angular.js"></script>
     </body>
     </html>
+
+Right now if we refresh our browser, it'll shows `json` formatted data. To make
+it right, let's change `{{diary}}` into `{{diary.title}}`. Still with me??!
+
+Okay now it's time to wired up real data into our app using angular service.
+Open up `app-angular.js` then add following code.
+
+    app.service('diariesService', function() {
+      var db = new PouchDB('diaries');
+      this.getDiaries = function() {
+        db.sync("http://localhost:5984/diaries");
+
+      };
+    });
+
+> View on github
+
+Then we called it from inside controller.
+
+
+    app.controller('diariesController', function($scope, diariesService) {
+      function init() {
+        $scope.diaries = diariesService.getDiaries();
+      }
+
+      init();
+    });
+
+> View on github
