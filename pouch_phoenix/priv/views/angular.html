@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>AngularJS Meet PouchDB</title>
 </head>
-<body>
+<body ng-init="diaries=['Entry #1', 'Entry #2']">
   <h1>Five Senses Diary</h1>
     <table>
       <th>
@@ -15,7 +15,8 @@
         <td>Taste</td>
         <td>Touch</td>
       </th>
-      <tr>
+      <tr ng-repeat="diary in diaries">
+        <td>{{diary}}</td>
         <td></td>
         <td></td>
         <td></td>
