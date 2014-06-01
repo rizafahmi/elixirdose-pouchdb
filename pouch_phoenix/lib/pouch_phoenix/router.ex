@@ -3,4 +3,5 @@ defmodule PouchPhoenix.Router do
 
   plug Plug.Static, at: "/static", from: :pouch_phoenix
   get "/", PouchPhoenix.Controllers.Pages, :index, as: :page
+  get "/angular", PouchPhoenix.Controllers.Pages, :angular
 end
